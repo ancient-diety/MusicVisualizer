@@ -1,4 +1,124 @@
+// =========================================================
+// CREATE VISUALIZER BARS
+// =========================================================
+
+const barsContainer = document.getElementById("bars");
+const BAR_COUNT = 64;
+
+for (let i = 0; i < BAR_COUNT; i++) {
+
+    const bar = document.createElement("div");
+
+    bar.className = "bar";
+    bar.style.height = "8px";
+
+    barsContainer.appendChild(bar);
+
+}
+
 const bars = document.querySelectorAll(".bar");
+
+
+// =========================================================
+// SETTINGS MENU
+// =========================================================
+
+const settingsButton = document.getElementById("settings-button");
+const settingsMenu = document.getElementById("settings-menu");
+
+settingsButton.addEventListener("click", () => {
+
+    settingsMenu.classList.toggle("hidden");
+
+});
+
+
+// =========================================================
+// THEMES
+// =========================================================
+
+const themeButtons = document.querySelectorAll(".theme-button");
+
+themeButtons.forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        const theme = button.dataset.theme;
+
+        if (theme === "crimson") {
+
+            document.documentElement.style.setProperty(
+                "--bar-gradient",
+                "linear-gradient(to top, #700000, #ff3b3b)"
+            );
+
+        } else if (theme === "amethyst") {
+
+            document.documentElement.style.setProperty(
+                "--bar-gradient",
+                "linear-gradient(to top, #4b0082, #d38cff)"
+            );
+
+        }
+
+    });
+
+});
+
+
+// =========================================================
+// AUDIO
+// =========================================================
+
+const uploadButton = document.getElementById("upload-button");
+const audioFile = document.getElementById("audio-file");
+
+let audio = new Audio();
+
+uploadButton.addEventListener("click", () => {
+
+    audioFile.click();
+
+});
+
+const audioContext = new AudioContext();
+
+const analyser = audioContext.createAnalyser();
+
+analyser.fftSize = 128;
+
+const source = audioContext.createMediaElementSource(audio);
+
+source.connect(analyser);
+analyser.connect(audioContext.destination);
+
+const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+
+// =========================================================
+// LOAD SONG
+// =========================================================
+
+audioFile.addEventListener("change", async (event) => {
+
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    audio.src = URL.createObjectURL(file);
+
+    await audioContext.resume();
+
+    audio.play();
+
+    animateBars();
+
+});
+
+
+// =========================================================
+// VISUALIZER
+// =========================================================
 
 function animateBars() {
 
@@ -10,41 +130,25 @@ function animateBars() {
 
         let value = dataArray[index];
 
-        // Reduce bass so it isn't ridiculous
+        // Calm the bass a little
         if (index < 8) {
             value *= 0.45;
         }
 
+        // Compress loud sounds
         const compressed = Math.sqrt(value);
 
-        const height = Math.max(8, compressed * 8);
+        // Scale height
+        const targetHeight = Math.max(8, compressed * 8);
 
-        const current = parseFloat(bar.style.height) || 8;
+        // Smooth movement
+        const currentHeight = parseFloat(bar.style.height) || 8;
 
-        const smooth = current + (height - current) * 0.2;
+        const smoothHeight =
+            currentHeight + (targetHeight - currentHeight) * 0.2;
 
-        bar.style.height = `${smooth}px`;
+        bar.style.height = `${smoothHeight}px`;
 
     });
 
 }
-
-    bars.forEach((bar, index) => {
-
-    let value = dataArray[index];
-
-    if (index < 8) {
-        value *= 0.45;
-    }
-
-    const compressed = Math.sqrt(value);
-
-    const height = Math.max(8, compressed * 8);
-
-    const current = parseFloat(bar.style.height) || 8;
-
-    const smooth = current + (height - current) * 0.2;
-
-    bar.style.height = `${smooth}px`;
-
-});
