@@ -64,3 +64,28 @@ themeButtons.forEach(button => {
     });
 
 });
+
+const uploadButton = document.getElementById("upload-button");
+const audioFile = document.getElementById("audio-file");
+
+let audio = new Audio();
+
+uploadButton.addEventListener("click", () => {
+
+    audioFile.click();
+
+});
+
+audioFile.addEventListener("change", (event) => {
+
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    const url = URL.createObjectURL(file);
+
+    audio.src = url;
+
+    audio.play();
+
+});
