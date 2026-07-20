@@ -14,49 +14,56 @@
 
     <main id="player">
 
+        <!-- Settings -->
+
         <button id="settings-button">⚙</button>
 
         <div id="settings-menu" class="hidden">
 
-    <h2>Appearance</h2>
+            <h2>Appearance</h2>
 
-    <button class="theme-button" data-theme="crimson">
-        🔴 Crimson
-    </button>
+            <button class="theme-button" data-theme="crimson">
+                🔴 Crimson
+            </button>
 
-    <button class="theme-button" data-theme="amethyst">
-        🟣 Amethyst
-    </button>
+            <button class="theme-button" data-theme="amethyst">
+                🟣 Amethyst
+            </button>
 
         </div>
 
+
+        <!-- Album -->
+
         <div id="album-art"></div>
 
-    <div id="song-info">
-        <h1>Song Title</h1>
-        <p>Artist Name</p>
-    </div>
+        <div id="song-info">
+            <h1>Song Title</h1>
+            <p>Artist Name</p>
+        </div>
 
-    <div id="visualizer">
 
-    <div id="bars">
+        <!-- Visualizer -->
 
-    </div>
+        <div id="visualizer">
+
+            <div id="bars"></div>
+
+        </div>
+
+
+        <!-- Music Upload -->
 
         <input
-    type="file"
-    id="audio-file"
-    accept="audio/*"
-    hidden
->
+            type="file"
+            id="audio-file"
+            accept="audio/*"
+            hidden
+        >
 
-<button id="upload-button">
-
-    Choose Music
-
-</button>
-
-</div>
+        <button id="upload-button">
+            Choose Music
+        </button>
 
     </main>
 
