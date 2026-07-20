@@ -28,3 +28,13 @@ setInterval(() => {
     });
 
 }, 80);
+
+const settingsButton = document.getElementById("settings-button");
+
+const settingsMenu = document.getElementById("settings-menu");
+
+settingsButton.addEventListener("click", () => {
+
+    settingsMenu.classList.toggle("hidden");
+
+});
