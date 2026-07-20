@@ -82,9 +82,12 @@ body {
 
 .bar {
     width: 8px;
-    height: 30px;
+
+    min-height: 8px;
 
     background: white;
 
-    border-radius: 20px;
+    border-radius: 999px;
+
+    transition: height 0.08s linear;
 }
