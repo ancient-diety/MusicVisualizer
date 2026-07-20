@@ -32,3 +32,40 @@ body {
 
     border: 2px solid #2f2f2f;
 }
+
+#player {
+    padding: 30px;
+}
+
+#album-art {
+    width: 180px;
+    height: 180px;
+
+    background: #303030;
+
+    border-radius: 20px;
+}
+
+#song-info {
+    margin-top: 20px;
+}
+
+#song-info h1 {
+    font-size: 2rem;
+}
+
+#song-info p {
+    margin-top: 8px;
+    color: #aaaaaa;
+}
+
+#visualizer {
+    margin-top: 40px;
+
+    width: 100%;
+    height: 120px;
+
+    background: #252525;
+
+    border-radius: 15px;
+}
