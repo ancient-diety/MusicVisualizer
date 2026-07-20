@@ -1,3 +1,16 @@
+:root {
+
+    --background: #0f0f0f;
+
+    --player: #1b1b1b;
+
+    --bar-gradient: linear-gradient(
+        to top,
+        #700000,
+        #ff3b3b
+    );
+
+}
 /* ---------- Reset ---------- */
 
 * {
@@ -85,8 +98,8 @@ body {
 
     min-height: 8px;
 
-    background: white;
-
+    background: var(--bar-gradient);
+    
     border-radius: 999px;
 
     transition: height 0.08s linear;
