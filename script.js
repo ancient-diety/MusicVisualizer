@@ -127,8 +127,8 @@ function animateBars() {
 
         const value = dataArray[index];
 
-        const height = Math.max(8, value * 2);
-
+        const height = Math.max(8, value * 0.5);
+        
         bar.style.height = `${height}px`;
 
     });
