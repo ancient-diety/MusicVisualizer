@@ -121,3 +121,63 @@ body {
 
     transition: height 0.08s linear;
 }
+
+#settings-button {
+
+    position: absolute;
+
+    top: 20px;
+    right: 20px;
+
+    background: none;
+
+    border: none;
+
+    color: white;
+
+    font-size: 28px;
+
+    cursor: pointer;
+}
+
+#settings-menu {
+
+    position: absolute;
+
+    top: 60px;
+    right: 20px;
+
+    width: 220px;
+
+    padding: 15px;
+
+    background: var(--player);
+
+    border: 2px solid var(--border);
+
+    border-radius: 15px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.hidden {
+
+    display: none !important;
+}
+
+.theme-button {
+
+    padding: 10px;
+
+    background: var(--visualizer);
+
+    color: white;
+
+    border: none;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+}
