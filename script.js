@@ -14,3 +14,17 @@ for (let i = 0; i < BAR_COUNT; i++) {
     barsContainer.appendChild(bar);
 
 }
+
+const bars = document.querySelectorAll(".bar");
+
+setInterval(() => {
+
+    bars.forEach(bar => {
+
+        const randomHeight = Math.random() * 120 + 10;
+
+        bar.style.height = `${randomHeight}px`;
+
+    });
+
+}, 80);
