@@ -127,10 +127,14 @@ function animateBars() {
 
         const value = dataArray[index];
 
-        const height = Math.max(8, value * 0.5);
-        
-        bar.style.height = `${height}px`;
+        const height = Math.min(120, Math.max(8, value * 0.6));
 
-    });
+        const current = parseFloat(bar.style.height) || 8;
+
+        const smooth = current + (height - current) * 0.2;
+
+        bar.style.height = `${smooth}px`;
+
+      });
 
 }
