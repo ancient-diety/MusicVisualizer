@@ -125,16 +125,20 @@ function animateBars() {
 
     bars.forEach((bar, index) => {
 
-        const value = dataArray[index];
+    let value = dataArray[index];
 
-        const height = Math.min(120, Math.max(8, value * 0.6));
+    if (index < 8) {
+        value *= 0.45;
+    }
 
-        const current = parseFloat(bar.style.height) || 8;
+    const compressed = Math.sqrt(value);
 
-        const smooth = current + (height - current) * 0.2;
+    const height = Math.max(8, compressed * 8);
 
-        bar.style.height = `${smooth}px`;
+    const current = parseFloat(bar.style.height) || 8;
 
-      });
+    const smooth = current + (height - current) * 0.2;
 
-}
+    bar.style.height = `${smooth}px`;
+
+});
