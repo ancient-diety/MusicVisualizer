@@ -79,3 +79,12 @@ body {
     justify-content: space-evenly;
     align-items: flex-end;
 }
+
+.bar {
+    width: 8px;
+    height: 30px;
+
+    background: white;
+
+    border-radius: 20px;
+}
