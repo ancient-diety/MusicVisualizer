@@ -15,20 +15,6 @@ for (let i = 0; i < BAR_COUNT; i++) {
 
 }
 
-const bars = document.querySelectorAll(".bar");
-
-setInterval(() => {
-
-    bars.forEach(bar => {
-
-        const randomHeight = Math.random() * 120 + 10;
-
-        bar.style.height = `${randomHeight}px`;
-
-    });
-
-}, 80);
-
 const settingsButton = document.getElementById("settings-button");
 
 const settingsMenu = document.getElementById("settings-menu");
@@ -76,7 +62,23 @@ uploadButton.addEventListener("click", () => {
 
 });
 
-audioFile.addEventListener("change", (event) => {
+const audioContext = new AudioContext();
+
+const analyser = audioContext.createAnalyser();
+
+analyser.fftSize = 128;
+
+const source = audioContext.createMediaElementSource(audio);
+
+source.connect(analyser);
+
+analyser.connect(audioContext.destination);
+
+const bufferLength = analyser.frequencyBinCount;
+
+const dataArray = new Uint8Array(bufferLength);
+
+audioFile.addEventListener("change", async (event) => {
 
     const file = event.target.files[0];
 
@@ -86,6 +88,49 @@ audioFile.addEventListener("change", (event) => {
 
     audio.src = url;
 
+    await audioContext.resume();
+
     audio.play();
 
+    animateBars();
+
 });
+
+
+function animateBars() {
+
+    requestAnimationFrame(animateBars);
+
+    analyser.getByteFrequencyData(dataArray);
+
+    const bars = document.querySelectorAll(".bar");
+
+    function animateBars() {
+
+    requestAnimationFrame(animateBars);
+
+    analyser.getByteFrequencyData(dataArray);
+
+    bars.forEach((bar, index) => {
+
+        const value = dataArray[index];
+
+        const height = Math.max(8, value * 2);
+
+        bar.style.height = `${height}px`;
+
+    });
+
+}
+
+    bars.forEach((bar, index) => {
+
+        const value = dataArray[index];
+
+        const height = Math.max(8, value * 2);
+
+        bar.style.height = `${height}px`;
+
+    });
+
+}
