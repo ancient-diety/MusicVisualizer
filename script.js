@@ -136,61 +136,71 @@ audioFile.addEventListener("change", async (event) => {
 
     jsmediatags.read(file, {
 
-    onSuccess: function(tag) {
+onSuccess: function(tag) {
 
-        const tags = tag.tags;
+    const tags = tag.tags;
 
-        songTitle.textContent =
-            tags.title || "Unknown Title";
+    songTitle.textContent =
+        tags.title || "Unknown Title";
 
-        artistName.textContent =
-            tags.artist || "Unknown Artist";
+    artistName.textContent =
+        tags.artist || "Unknown Artist";
 
-        if (tags.picture) {
+    if (tags.picture) {
 
-            const picture = tags.picture;
+        const picture = tags.picture;
 
-            let base64 = "";
+        let base64 = "";
 
-            for (let i = 0; i < picture.data.length; i++) {
+        for (let i = 0; i < picture.data.length; i++) {
 
-                base64 += String.fromCharCode(picture.data[i]);
-
-            }
-
-            const image =
-                `data:${picture.format};base64,${btoa(base64)}`;
-
-            const img = new Image();
-            
-            img.src = image;
-
-            img.onload = () => {
-
-                const colors = colorThief.getPalette(img, 2);
-
-                const color1 = colors[0];
-
-                const color2 = colors[1];
-            };
-
-            albumArt.style.backgroundImage = `url(${image})`;
-
-            albumArt.style.backgroundSize = "cover";
-
-            albumArt.style.backgroundPosition = "center";
+            base64 += String.fromCharCode(picture.data[i]);
 
         }
 
-    },
+        const image =
+            `data:${picture.format};base64,${btoa(base64)}`;
 
-    onError: function(error) {
+        albumArt.style.backgroundImage = `url(${image})`;
 
-        console.log(error);
+        albumArt.style.backgroundSize = "cover";
+        albumArt.style.backgroundPosition = "center";
+
+        // Wait for the image to load
+        const img = new Image();
+
+        img.crossOrigin = "anonymous";
+
+        img.src = image;
+
+        img.onload = () => {
+
+            try {
+
+                const colors =
+                    colorThief.getPalette(img, 2);
+
+                const color1 = colors[0];
+                const color2 = colors[1];
+
+                player.style.background =
+                    `linear-gradient(
+                        135deg,
+                        rgb(${color1.join(",")}),
+                        rgb(${color2.join(",")})
+                    )`;
+
+            } catch (error) {
+
+                console.log("ColorThief:", error);
+
+            }
+
+        };
 
     }
 
-});
+}
 
     await audioContext.resume();
 
