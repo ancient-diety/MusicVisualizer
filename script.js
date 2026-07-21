@@ -37,6 +37,22 @@ settingsButton.addEventListener("click", () => {
 
 });
 
+const sensitivitySlider =
+    document.getElementById("sensitivity");
+
+const sensitivityValue =
+    document.getElementById("sensitivity-value");
+
+let sensitivity = 1;
+
+sensitivitySlider.addEventListener("input", () => {
+
+    sensitivity = Number(sensitivitySlider.value);
+
+    sensitivityValue.textContent =
+        `${sensitivity.toFixed(2)}x`;
+
+});
 
 // =========================================================
 // THEMES
@@ -193,7 +209,8 @@ function animateBars() {
     const compressed = Math.pow(value, 0.7);
 
     // Height
-    const targetHeight = Math.max(8, compressed * 5);
+    const targetHeight =
+    Math.max(8, compressed * 5 * sensitivity);
 
     // Previous height
     const currentHeight = parseFloat(bar.style.height) || 8;
