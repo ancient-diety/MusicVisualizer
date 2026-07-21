@@ -3,7 +3,6 @@
 // =========================================================
 
 const barsContainer = document.getElementById("bars");
-const BAR_COUNT = 64;
 
 let BAR_COUNT;
 
@@ -15,6 +14,18 @@ else if (window.innerWidth <= 768) {
 }
 else {
     BAR_COUNT = 64;
+}
+
+// Create the bars
+for (let i = 0; i < BAR_COUNT; i++) {
+
+    const bar = document.createElement("div");
+
+    bar.className = "bar";
+    bar.style.height = "8px";
+
+    barsContainer.appendChild(bar);
+
 }
 
 const bars = document.querySelectorAll(".bar");
