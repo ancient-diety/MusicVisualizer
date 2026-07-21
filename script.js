@@ -18,6 +18,11 @@ for (let i = 0; i < BAR_COUNT; i++) {
 
 const bars = document.querySelectorAll(".bar");
 
+const songTitle = document.getElementById("song-title");
+
+const artistName = document.getElementById("artist-name");
+
+const albumArt = document.getElementById("album-art");
 
 // =========================================================
 // SETTINGS MENU
@@ -106,6 +111,51 @@ audioFile.addEventListener("change", async (event) => {
     if (!file) return;
 
     audio.src = URL.createObjectURL(file);
+
+    jsmediatags.read(file, {
+
+    onSuccess: function(tag) {
+
+        const tags = tag.tags;
+
+        songTitle.textContent =
+            tags.title || "Unknown Title";
+
+        artistName.textContent =
+            tags.artist || "Unknown Artist";
+
+        if (tags.picture) {
+
+            const picture = tags.picture;
+
+            let base64 = "";
+
+            for (let i = 0; i < picture.data.length; i++) {
+
+                base64 += String.fromCharCode(picture.data[i]);
+
+            }
+
+            const image =
+                `data:${picture.format};base64,${btoa(base64)}`;
+
+            albumArt.style.backgroundImage = `url(${image})`;
+
+            albumArt.style.backgroundSize = "cover";
+
+            albumArt.style.backgroundPosition = "center";
+
+        }
+
+    },
+
+    onError: function(error) {
+
+        console.log(error);
+
+    }
+
+});
 
     await audioContext.resume();
 
