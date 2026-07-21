@@ -120,7 +120,7 @@ const audioContext = new AudioContext();
 
 const analyser = audioContext.createAnalyser();
 
-analyser.fftSize = 128;
+analyser.fftSize = 512;
 
 const source = audioContext.createMediaElementSource(audio);
 
@@ -206,11 +206,12 @@ function animateBars() {
 
     bars.forEach((bar, index) => {
 
-        let value = dataArray[index];
+        const dataIndex = Math.floor(index * dataArray.length / BAR_COUNT);
+        let value = dataArray[dataIndex];
 
         // Reduce bass
         const weight =
-            0.35 + Math.pow(index / BAR_COUNT, 0.8) * 0.65;
+           0.6 + Math.pow(index / BAR_COUNT, 0.6) * 0.4;
 
         value *= weight;
 
