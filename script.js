@@ -5,15 +5,16 @@
 const barsContainer = document.getElementById("bars");
 const BAR_COUNT = 64;
 
-for (let i = 0; i < BAR_COUNT; i++) {
+let BAR_COUNT;
 
-    const bar = document.createElement("div");
-
-    bar.className = "bar";
-    bar.style.height = "8px";
-
-    barsContainer.appendChild(bar);
-
+if (window.innerWidth <= 480) {
+    BAR_COUNT = 20;
+}
+else if (window.innerWidth <= 768) {
+    BAR_COUNT = 32;
+}
+else {
+    BAR_COUNT = 64;
 }
 
 const bars = document.querySelectorAll(".bar");
@@ -178,9 +179,17 @@ audioFile.addEventListener("change", async (event) => {
 // VISUALIZER
 // =========================================================
 
+let frame = 0;
+
 function animateBars() {
 
     requestAnimationFrame(animateBars);
+
+    frame++;
+
+if (window.innerWidth <= 768 && frame % 2 !== 0) {
+    return;
+}
 
     analyser.getByteFrequencyData(dataArray);
 
