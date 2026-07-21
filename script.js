@@ -196,11 +196,11 @@ function animateBars() {
 
     requestAnimationFrame(animateBars);
 
-    frame++;
-
-if (window.innerWidth <= 768 && frame % 2 !== 0) {
-    return;
-}
+// frame++;
+//
+// if (window.innerWidth <= 768 && frame % 2 !== 0) {
+//     return;
+// }
 
     analyser.getByteFrequencyData(dataArray);
 
