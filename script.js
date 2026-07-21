@@ -175,9 +175,10 @@ audioFile.addEventListener("change", async (event) => {
 });
 
 // =========================================================
-// VISUALIZER START
+// VISUALIZER
 // =========================================================
-animateBars(); // start once globally
+
+function animateBars() {
 
     requestAnimationFrame(animateBars);
 
@@ -185,29 +186,36 @@ animateBars(); // start once globally
 
     bars.forEach((bar, index) => {
 
-    let value = dataArray[index];
+        let value = dataArray[index];
 
-    // Reduce bass a little
-    const weight = 0.35 + Math.pow(index / BAR_COUNT, 0.8) * 0.65;
+        // Reduce bass
+        const weight =
+            0.35 + Math.pow(index / BAR_COUNT, 0.8) * 0.65;
 
-    value *= weight;
+        value *= weight;
 
-    // Compress loud sounds
-    const compressed = Math.pow(value, 0.7);
+        // Compress loud sounds
+        const compressed = Math.pow(value, 0.7);
 
-    // Height
-    const targetHeight =
-    Math.max(8, compressed * 5 * sensitivity);
+        // Calculate height
+        const targetHeight =
+            Math.max(8, compressed * 5 * sensitivity);
 
-    // Previous height
-    const currentHeight = parseFloat(bar.style.height) || 8;
+        // Smooth animation
+        const currentHeight =
+            parseFloat(bar.style.height) || 8;
 
-    // Smooth animation
-    const smoothHeight =
-        currentHeight + (targetHeight - currentHeight) * 0.35;
+        const smoothHeight =
+            currentHeight + (targetHeight - currentHeight) * 0.35;
 
-    bar.style.height = `${smoothHeight}px`;
+        bar.style.height = `${smoothHeight}px`;
 
-});
+    });
 
 }
+
+// =========================================================
+// START VISUALIZER
+// =========================================================
+
+animateBars();
