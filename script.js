@@ -123,132 +123,61 @@ const dataArray = new Uint8Array(analyser.frequencyBinCount);
 // =========================================================
 
 audioFile.addEventListener("change", async (event) => {
-
     const file = event.target.files[0];
-
     if (!file) return;
 
     audio.src = URL.createObjectURL(file);
 
-      await audioContext.resume();
-
-      await audio.play();
+    await audioContext.resume();
+    await audio.play();
 
     jsmediatags.read(file, {
+        onSuccess: function(tag) {
+            const tags = tag.tags;
+            songTitle.textContent = tags.title || "Unknown Title";
+            artistName.textContent = tags.artist || "Unknown Artist";
 
-onSuccess: function(tag) {
+            if (tags.picture) {
+                const picture = tags.picture;
+                let base64 = "";
+                for (let i = 0; i < picture.data.length; i++) {
+                    base64 += String.fromCharCode(picture.data[i]);
+                }
+                const image = `data:${picture.format};base64,${btoa(base64)}`;
+                albumArt.style.backgroundImage = `url(${image})`;
+                albumArt.style.backgroundSize = "cover";
+                albumArt.style.backgroundPosition = "center";
 
-    const tags = tag.tags;
+                const img = new Image();
+                img.src = image;
 
-    songTitle.textContent =
-        tags.title || "Unknown Title";
-
-    artistName.textContent =
-        tags.artist || "Unknown Artist";
-
-    if (tags.picture) {
-
-        const picture = tags.picture;
-
-        let base64 = "";
-
-        for (let i = 0; i < picture.data.length; i++) {
-
-            base64 += String.fromCharCode(picture.data[i]);
-
-        }
-
-        const image =
-            `data:${picture.format};base64,${btoa(base64)}`;
-
-        albumArt.style.backgroundImage = `url(${image})`;
-
-        albumArt.style.backgroundSize = "cover";
-        albumArt.style.backgroundPosition = "center";
-
-        // Wait for the image to load
-        const img = new Image();
-
-        img.crossOrigin = "anonymous";
-
-        img.src = image;
-
-        img.onload = () => {
-
-            try {
-
-                const colors =
-                    colorThief.getPalette(img, 2);
-
-                const color1 = colors[0];
-                const color2 = colors[1];
-
-                player.style.background =
-                    `linear-gradient(
-                        135deg,
-                        rgb(${color1.join(",")}),
-                        rgb(${color2.join(",")})
-                    )`;
-
-            } catch (error) {
-
-                console.log("ColorThief:", error);
-
+                img.onload = () => {
+                    try {
+                        const colors = colorThief.getPalette(img, 2);
+                        const color1 = colors[0];
+                        const color2 = colors[1];
+                        // ✅ player is defined earlier now
+                        document.documentElement.style.setProperty(
+    "--player",
+    `linear-gradient(
+        135deg,
+        rgb(${color1.join(",")}),
+        rgb(${color2.join(",")})
+    )`
+);
+                    } catch (error) {
+                        console.log("ColorThief:", error);
+                    }
+                };
             }
-
-        };
-
-    }
-
-}
-
-    await audioContext.resume();
-
-    audio.play();
-
-    animateBars();
-
-});
-
-const player = document.getElementById("player");
-
-player.addEventListener("dragover", (event) => {
-
-    event.preventDefault();
-
-    player.classList.add("dragging");
-
-});
-
-player.addEventListener("dragleave", () => {
-
-    player.classList.remove("dragging");
-
-});
-
-player.addEventListener("drop", (event) => {
-
-    event.preventDefault();
-
-    player.classList.remove("dragging");
-
-    const file = event.dataTransfer.files[0];
-
-    if (!file) return;
-
-    if (!file.type.startsWith("audio")) return;
-
-    audioFile.files = event.dataTransfer.files;
-
-    audioFile.dispatchEvent(new Event("change"));
-
+        }
+    });
 });
 
 // =========================================================
-// VISUALIZER
+// VISUALIZER START
 // =========================================================
-
-function animateBars() {
+animateBars(); // start once globally
 
     requestAnimationFrame(animateBars);
 
