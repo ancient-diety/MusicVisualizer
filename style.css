@@ -73,6 +73,18 @@ body {
     border-radius: 20px;
 }
 
+#player.dragging{
+
+outline:3px dashed white;
+
+outline-offset:10px;
+
+transform:scale(1.01);
+
+transition:.2s;
+
+}
+
 
 /* ========================================================= */
 /*                         ALBUM ART                         */
