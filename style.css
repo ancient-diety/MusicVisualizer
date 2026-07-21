@@ -134,14 +134,13 @@ body {
 }
 
 .bar {
-    width: 8px;
-    min-height: 8px;
 
     background: var(--bar-gradient);
 
-    border-radius: 999px;
+    box-shadow:
+        0 0 8px rgba(255,255,255,.08),
+        0 0 18px rgba(255,70,70,.25);
 
-    transition: height 0.08s linear;
 }
 
 
