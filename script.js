@@ -167,8 +167,11 @@ audioFile.addEventListener("change", async (event) => {
 
             img.onload = () => {
 
-            // we'll do stuff here
+                const colors = colorThief.getPalette(img, 2);
 
+                const color1 = colors[0];
+
+                const color2 = colors[1];
             };
 
             albumArt.style.backgroundImage = `url(${image})`;
