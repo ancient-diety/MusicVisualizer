@@ -79,12 +79,18 @@ body {
 /* ========================================================= */
 
 #album-art {
+
     width: 180px;
     height: 180px;
 
     background: var(--album);
 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
     border-radius: 20px;
+
 }
 
 
@@ -135,7 +141,15 @@ body {
 
 .bar {
 
+    width: 8px;
+
+    min-height: 8px;
+
     background: var(--bar-gradient);
+
+    border-radius: 999px;
+
+    transition: height 0.08s linear;
 
     box-shadow:
         0 0 8px rgba(255,255,255,.08),
