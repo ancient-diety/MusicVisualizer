@@ -105,6 +105,17 @@ transition:.2s;
 
 }
 
+document.getElementById("player").style.background =
+
+`linear-gradient(
+
+135deg,
+
+rgb(${color1.join(",")}),
+
+rgb(${color2.join(",")})
+
+)`;
 
 /* ========================================================= */
 /*                         SONG INFO                         */
