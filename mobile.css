@@ -1,1 +1,85 @@
+/* ========================================================= */
+/* MOBILE */
+/* ========================================================= */
 
+@media (max-width: 768px) {
+
+    #player {
+
+        width: 95vw;
+        height: auto;
+
+        padding: 20px;
+
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    #album-art {
+
+        width: 140px;
+        height: 140px;
+
+        margin: 0 auto;
+
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    #song-info {
+
+        text-align: center;
+
+    }
+
+    #song-info h1 {
+
+        font-size: 1.4rem;
+
+    }
+
+}
+
+@media (max-width:768px){
+
+#visualizer{
+
+height:90px;
+
+}
+
+.bar{
+
+width:5px;
+
+}
+
+}
+
+@media (max-width:768px){
+
+#upload-button{
+
+width:100%;
+
+margin-top:20px;
+
+}
+
+}
+
+@media (max-width:768px){
+
+#settings-menu{
+
+width:90%;
+
+right:5%;
+
+}
+
+}
