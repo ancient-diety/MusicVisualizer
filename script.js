@@ -24,6 +24,8 @@ const artistName = document.getElementById("artist-name");
 
 const albumArt = document.getElementById("album-art");
 
+const colorThief = new ColorThief();
+
 // =========================================================
 // SETTINGS MENU
 // =========================================================
@@ -158,6 +160,16 @@ audioFile.addEventListener("change", async (event) => {
 
             const image =
                 `data:${picture.format};base64,${btoa(base64)}`;
+
+            const img = new Image();
+            
+            img.src = image;
+
+            img.onload = () => {
+
+            // we'll do stuff here
+
+            };
 
             albumArt.style.backgroundImage = `url(${image})`;
 
