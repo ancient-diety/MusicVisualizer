@@ -185,9 +185,9 @@ function animateBars() {
     let value = dataArray[index];
 
     // Reduce bass a little
-    if (index < 8) {
-        value *= 0.55;
-    }
+    const weight = 0.35 + Math.pow(index / BAR_COUNT, 0.8) * 0.65;
+
+    value *= weight;
 
     // Compress loud sounds
     const compressed = Math.pow(value, 0.7);
