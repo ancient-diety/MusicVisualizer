@@ -182,31 +182,28 @@ function animateBars() {
 
     bars.forEach((bar, index) => {
 
-        const step = Math.floor(dataArray.length / BAR_COUNT);
+    let value = dataArray[index];
 
-let value = 0;
+    // Reduce bass a little
+    if (index < 8) {
+        value *= 0.55;
+    }
 
-for (let i = 0; i < step; i++) {
+    // Compress loud sounds
+    const compressed = Math.pow(value, 0.7);
 
-    value += dataArray[index * step + i] || 0;
+    // Height
+    const targetHeight = Math.max(8, compressed * 5);
 
-}
+    // Previous height
+    const currentHeight = parseFloat(bar.style.height) || 8;
 
-value /= step;
+    // Smooth animation
+    const smoothHeight =
+        currentHeight + (targetHeight - currentHeight) * 0.35;
 
-if (index < 8) {
-    value *= 0.55;
-}
+    bar.style.height = `${smoothHeight}px`;
 
-const compressed = Math.pow(value, 0.7);
-
-const targetHeight = Math.max(8, compressed * 5);
-
-const smoothHeight =
-    currentHeight + (targetHeight - currentHeight) * 0.35;
-
-        bar.style.height = `${smoothHeight}px`;
-
-    });
+});
 
 }
