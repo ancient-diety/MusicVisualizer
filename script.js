@@ -7,10 +7,10 @@ const barsContainer = document.getElementById("bars");
 let BAR_COUNT;
 
 if (window.innerWidth <= 480) {
-    BAR_COUNT = 20;
+    BAR_COUNT = 28;
 }
 else if (window.innerWidth <= 768) {
-    BAR_COUNT = 32;
+    BAR_COUNT = 40;
 }
 else {
     BAR_COUNT = 64;
