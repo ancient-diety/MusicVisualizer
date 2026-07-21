@@ -185,6 +185,39 @@ audioFile.addEventListener("change", async (event) => {
 
 });
 
+const player = document.getElementById("player");
+
+player.addEventListener("dragover", (event) => {
+
+    event.preventDefault();
+
+    player.classList.add("dragging");
+
+});
+
+player.addEventListener("dragleave", () => {
+
+    player.classList.remove("dragging");
+
+});
+
+player.addEventListener("drop", (event) => {
+
+    event.preventDefault();
+
+    player.classList.remove("dragging");
+
+    const file = event.dataTransfer.files[0];
+
+    if (!file) return;
+
+    if (!file.type.startsWith("audio")) return;
+
+    audioFile.files = event.dataTransfer.files;
+
+    audioFile.dispatchEvent(new Event("change"));
+
+});
 
 // =========================================================
 // VISUALIZER
