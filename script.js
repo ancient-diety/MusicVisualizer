@@ -112,6 +112,10 @@ audioFile.addEventListener("change", async (event) => {
 
     audio.src = URL.createObjectURL(file);
 
+      await audioContext.resume();
+
+      await audio.play();
+
     jsmediatags.read(file, {
 
     onSuccess: function(tag) {
