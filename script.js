@@ -6,6 +6,7 @@ class MusicVisualizer {
         this.audio = document.getElementById('audioElement');
         this.fileInput = document.getElementById('fileInput');
         this.fileName = document.getElementById('fileName');
+        this.albumArt = document.getElementById('albumArt');
         this.playBtn = document.getElementById('playBtn');
         this.pauseBtn = document.getElementById('pauseBtn');
         this.stopBtn = document.getElementById('stopBtn');
@@ -26,7 +27,6 @@ class MusicVisualizer {
         this.analyser = null;
         this.dataArray = null;
         this.bufferLength = 0;
-        this.source = null;
 
         // State
         this.isPlaying = false;
@@ -36,49 +36,55 @@ class MusicVisualizer {
         this.isFullscreen = false;
         this.particleSystem = [];
 
-        // Color Themes
+        // Color Themes - Dark Cyberpunk vibes
         this.themes = {
             neon: {
-                primary: '#16c784',
-                secondary: '#ff006e',
-                accent: '#00d9ff',
-                bars: ['#00d9ff', '#16c784', '#ff006e', '#ffa500'],
-                bg: 'rgba(15, 52, 96, 0.1)'
+                primary: '#00d4ff',
+                secondary: '#ff0080',
+                accent: '#00ff80',
+                bars: ['#00d4ff', '#00ff80', '#ff0080', '#ff6600'],
+                bg: 'rgba(10, 15, 25, 0.3)',
+                glow: 'rgba(0, 212, 255, 0.4)'
             },
             fire: {
-                primary: '#ff4500',
-                secondary: '#ff6347',
-                accent: '#ffa500',
-                bars: ['#ff4500', '#ff6347', '#ff8c00', '#ffa500'],
-                bg: 'rgba(255, 69, 0, 0.1)'
+                primary: '#ff2200',
+                secondary: '#ff6600',
+                accent: '#ffaa00',
+                bars: ['#ff1100', '#ff3300', '#ff5500', '#ff7700'],
+                bg: 'rgba(30, 10, 5, 0.3)',
+                glow: 'rgba(255, 34, 0, 0.4)'
             },
             ocean: {
-                primary: '#0099ff',
-                secondary: '#00d9ff',
+                primary: '#0088ff',
+                secondary: '#00ccff',
                 accent: '#00ffff',
-                bars: ['#0099ff', '#00d9ff', '#00ffff', '#00eeee'],
-                bg: 'rgba(0, 153, 255, 0.1)'
+                bars: ['#0066ff', '#0088ff', '#00aaff', '#00ccff'],
+                bg: 'rgba(5, 15, 30, 0.3)',
+                glow: 'rgba(0, 136, 255, 0.4)'
             },
             forest: {
-                primary: '#00cc66',
+                primary: '#00dd66',
                 secondary: '#00ff88',
                 accent: '#66ff99',
-                bars: ['#00cc66', '#00ff88', '#66ff99', '#88ffaa'],
-                bg: 'rgba(0, 204, 102, 0.1)'
+                bars: ['#00aa44', '#00dd66', '#00ff88', '#55ffaa'],
+                bg: 'rgba(5, 20, 10, 0.3)',
+                glow: 'rgba(0, 221, 102, 0.4)'
             },
             sunset: {
-                primary: '#ff6b6b',
-                secondary: '#ffa500',
-                accent: '#ffff00',
-                bars: ['#ff6b6b', '#ffa500', '#ffdd00', '#ffff00'],
-                bg: 'rgba(255, 107, 107, 0.1)'
+                primary: '#ff3366',
+                secondary: '#ff8833',
+                accent: '#ffdd00',
+                bars: ['#ff1144', '#ff3366', '#ff8833', '#ffbb00'],
+                bg: 'rgba(30, 10, 5, 0.3)',
+                glow: 'rgba(255, 51, 102, 0.4)'
             },
             dark: {
-                primary: '#808080',
-                secondary: '#b0b0b0',
-                accent: '#d0d0d0',
-                bars: ['#606060', '#808080', '#a0a0a0', '#c0c0c0'],
-                bg: 'rgba(128, 128, 128, 0.1)'
+                primary: '#666699',
+                secondary: '#9999dd',
+                accent: '#ccccff',
+                bars: ['#444466', '#666699', '#8888cc', '#aaaaddff'],
+                bg: 'rgba(15, 15, 25, 0.3)',
+                glow: 'rgba(102, 102, 153, 0.3)'
             }
         };
 
@@ -109,25 +115,31 @@ class MusicVisualizer {
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
                 this.audioContext = new AudioContext();
                 this.analyser = this.audioContext.createAnalyser();
-                this.analyser.fftSize = 256;
+                this.analyser.fftSize = 512;
                 this.bufferLength = this.analyser.frequencyBinCount;
                 this.dataArray = new Uint8Array(this.bufferLength);
 
-                // Connect audio element to analyser
-                const source = this.audioContext.createMediaElementAudioSource(this.audio);
-                source.connect(this.analyser);
-                this.analyser.connect(this.audioContext.destination);
+                // Connect audio element to analyser - only if not already connected
+                if (!this.audio.captureStream) {
+                    try {
+                        const source = this.audioContext.createMediaElementAudioSource(this.audio);
+                        source.connect(this.analyser);
+                        this.analyser.connect(this.audioContext.destination);
+                    } catch (e) {
+                        // Audio already connected or other error
+                    }
+                }
                 
-                this.updateStatus('Web Audio API initialized');
+                this.updateStatus('Audio initialized');
             } catch (e) {
-                this.updateStatus('Error: Web Audio API not supported');
+                this.updateStatus('Audio unavailable');
                 console.error(e);
             }
         }
 
-        // Resume audio context on user interaction
+        // Resume audio context if suspended
         if (this.audioContext && this.audioContext.state === 'suspended') {
-            this.audioContext.resume();
+            this.audioContext.resume().catch(e => console.log('Audio resume:', e));
         }
     }
 
@@ -173,8 +185,19 @@ class MusicVisualizer {
             const url = URL.createObjectURL(file);
             this.audio.src = url;
             this.fileName.textContent = file.name;
+            
+            // Try to extract cover art from file metadata
+            this.extractCoverArt(file);
+            
             this.updateStatus(`Loaded: ${file.name}`);
         }
+    }
+
+    extractCoverArt(file) {
+        // For now, set a default album art
+        // In a real app, you'd parse ID3 tags or use a music API
+        const defaultArt = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22%3E%3Crect fill=%22%23222%22 width=%22200%22 height=%22200%22/%3E%3Ccircle cx=%22100%22 cy=%22100%22 r=%2280%22 fill=%22%23333%22/%3E%3Ccircle cx=%22100%22 cy=%22100%22 r=%2260%22 fill=%22%231a1a1a%22/%3E%3Ccircle cx=%22100%22 cy=%22100%22 r=%2210%22 fill=%22%23555%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22 fill=%22%2300d4ff%22 font-size=%2260%22 font-family=%22Arial%22%3E♪%3C/text%3E%3C/svg%3E';
+        this.albumArt.src = defaultArt;
     }
 
     handleDrop(e) {
@@ -189,23 +212,32 @@ class MusicVisualizer {
     play() {
         if (this.audio.src) {
             this.initWebAudio();
-            this.audio.play();
+            // Resume audio context
+            if (this.audioContext && this.audioContext.state === 'suspended') {
+                this.audioContext.resume().then(() => {
+                    this.audio.play().catch(e => console.error('Play error:', e));
+                });
+            } else {
+                this.audio.play().catch(e => console.error('Play error:', e));
+            }
             this.isPlaying = true;
-            this.updateStatus('Playing...');
+            this.updateStatus('▶ Playing');
+        } else {
+            this.updateStatus('No file loaded');
         }
     }
 
     pause() {
         this.audio.pause();
         this.isPlaying = false;
-        this.updateStatus('Paused');
+        this.updateStatus('⏸ Paused');
     }
 
     stop() {
         this.audio.pause();
         this.audio.currentTime = 0;
         this.isPlaying = false;
-        this.updateStatus('Stopped');
+        this.updateStatus('⏹ Stopped');
     }
 
     setVolume(value) {
@@ -300,26 +332,34 @@ class MusicVisualizer {
         const width = this.canvas.width;
         const height = this.canvas.height;
 
-        this.ctx.fillStyle = theme.bg;
+        // Clear canvas with gradient background
+        const gradient = this.ctx.createLinearGradient(0, 0, 0, height);
+        gradient.addColorStop(0, '#0f0f15');
+        gradient.addColorStop(1, '#1a1a25');
+        this.ctx.fillStyle = gradient;
         this.ctx.fillRect(0, 0, width, height);
+
+        if (!this.analyser) return;
 
         this.analyser.getByteFrequencyData(this.dataArray);
 
-        const barWidth = (width / this.bufferLength) * 2.5;
+        const barWidth = width / this.bufferLength;
         let x = 0;
 
         for (let i = 0; i < this.bufferLength; i++) {
-            const barHeight = (this.dataArray[i] / 255) * height;
+            const barHeight = (this.dataArray[i] / 255) * height * 0.8;
             
-            // Color gradient based on frequency
-            const hue = (i / this.bufferLength) * 360;
             this.ctx.fillStyle = theme.bars[i % theme.bars.length];
             this.ctx.shadowColor = theme.bars[i % theme.bars.length];
-            this.ctx.shadowBlur = 10;
+            this.ctx.shadowBlur = 15;
+            this.ctx.shadowOffsetX = 0;
+            this.ctx.shadowOffsetY = 0;
 
-            this.ctx.fillRect(x, height - barHeight, barWidth, barHeight);
-            x += barWidth + 1;
+            this.ctx.fillRect(x, height - barHeight, barWidth - 1, barHeight);
+            x += barWidth;
         }
+
+        this.ctx.shadowBlur = 0;
     }
 
     drawWaveform() {
@@ -327,15 +367,22 @@ class MusicVisualizer {
         const width = this.canvas.width;
         const height = this.canvas.height;
 
-        this.ctx.fillStyle = theme.bg;
+        const gradient = this.ctx.createLinearGradient(0, 0, 0, height);
+        gradient.addColorStop(0, '#0f0f15');
+        gradient.addColorStop(1, '#1a1a25');
+        this.ctx.fillStyle = gradient;
         this.ctx.fillRect(0, 0, width, height);
+
+        if (!this.analyser) return;
 
         this.analyser.getByteFrequencyData(this.dataArray);
 
         this.ctx.strokeStyle = theme.primary;
         this.ctx.shadowColor = theme.primary;
-        this.ctx.shadowBlur = 15;
-        this.ctx.lineWidth = 3;
+        this.ctx.shadowBlur = 20;
+        this.ctx.lineWidth = 2;
+        this.ctx.lineCap = 'round';
+        this.ctx.lineJoin = 'round';
         this.ctx.beginPath();
 
         const sliceWidth = width / this.bufferLength;
@@ -355,6 +402,7 @@ class MusicVisualizer {
 
         this.ctx.lineTo(width, height / 2);
         this.ctx.stroke();
+        this.ctx.shadowBlur = 0;
     }
 
     drawCircular() {
@@ -363,44 +411,57 @@ class MusicVisualizer {
         const height = this.canvas.height;
         const centerX = width / 2;
         const centerY = height / 2;
-        const radius = Math.min(width, height) / 4;
+        const radius = Math.min(width, height) / 3;
 
-        this.ctx.fillStyle = theme.bg;
+        const gradient = this.ctx.createLinearGradient(0, 0, 0, height);
+        gradient.addColorStop(0, '#0f0f15');
+        gradient.addColorStop(1, '#1a1a25');
+        this.ctx.fillStyle = gradient;
         this.ctx.fillRect(0, 0, width, height);
+
+        if (!this.analyser) return;
 
         this.analyser.getByteFrequencyData(this.dataArray);
 
-        // Draw center circle
+        // Draw center glow
         this.ctx.fillStyle = theme.accent;
         this.ctx.shadowColor = theme.accent;
-        this.ctx.shadowBlur = 20;
+        this.ctx.shadowBlur = 30;
         this.ctx.beginPath();
-        this.ctx.arc(centerX, centerY, radius * 0.3, 0, Math.PI * 2);
+        this.ctx.arc(centerX, centerY, radius * 0.25, 0, Math.PI * 2);
         this.ctx.fill();
 
-        // Draw frequency rings
+        // Draw frequency bars in circle
         for (let i = 0; i < this.bufferLength; i++) {
             const angle = (i / this.bufferLength) * Math.PI * 2;
             const value = this.dataArray[i] / 255;
-            const distance = radius + value * radius;
+            const barHeight = value * radius * 0.7;
+            const distance = radius * 0.5;
 
-            const x = centerX + Math.cos(angle) * distance;
-            const y = centerY + Math.sin(angle) * distance;
+            const x1 = centerX + Math.cos(angle) * distance;
+            const y1 = centerY + Math.sin(angle) * distance;
+            const x2 = centerX + Math.cos(angle) * (distance + barHeight);
+            const y2 = centerY + Math.sin(angle) * (distance + barHeight);
 
-            this.ctx.fillStyle = theme.bars[i % theme.bars.length];
+            this.ctx.strokeStyle = theme.bars[i % theme.bars.length];
+            this.ctx.shadowColor = theme.bars[i % theme.bars.length];
+            this.ctx.shadowBlur = 10;
+            this.ctx.lineWidth = 2;
             this.ctx.beginPath();
-            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
-            this.ctx.fill();
+            this.ctx.moveTo(x1, y1);
+            this.ctx.lineTo(x2, y2);
+            this.ctx.stroke();
         }
 
-        // Draw connecting lines
+        // Draw outer ring
         this.ctx.strokeStyle = theme.primary;
-        this.ctx.globalAlpha = 0.3;
+        this.ctx.globalAlpha = 0.2;
         this.ctx.lineWidth = 1;
         this.ctx.beginPath();
-        this.ctx.arc(centerX, centerY, radius * 0.8, 0, Math.PI * 2);
+        this.ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
         this.ctx.stroke();
         this.ctx.globalAlpha = 1;
+        this.ctx.shadowBlur = 0;
     }
 
     drawParticles() {
@@ -408,24 +469,29 @@ class MusicVisualizer {
         const width = this.canvas.width;
         const height = this.canvas.height;
 
-        this.ctx.fillStyle = theme.bg;
+        const gradient = this.ctx.createLinearGradient(0, 0, 0, height);
+        gradient.addColorStop(0, '#0f0f15');
+        gradient.addColorStop(1, '#1a1a25');
+        this.ctx.fillStyle = gradient;
         this.ctx.fillRect(0, 0, width, height);
+
+        if (!this.analyser) return;
 
         this.analyser.getByteFrequencyData(this.dataArray);
 
         // Generate particles from frequency data
-        if (Math.random() < 0.3) {
-            for (let i = 0; i < 5; i++) {
+        if (Math.random() < 0.4) {
+            for (let i = 0; i < 8; i++) {
                 const freqIndex = Math.floor(Math.random() * this.bufferLength);
                 const frequency = this.dataArray[freqIndex] / 255;
 
                 this.particleSystem.push({
                     x: Math.random() * width,
                     y: Math.random() * height,
-                    vx: (Math.random() - 0.5) * 5,
-                    vy: (Math.random() - 0.5) * 5,
+                    vx: (Math.random() - 0.5) * 6,
+                    vy: (Math.random() - 0.5) * 6,
                     life: 1,
-                    size: frequency * 5 + 2,
+                    size: frequency * 8 + 2,
                     color: theme.bars[freqIndex % theme.bars.length]
                 });
             }
@@ -436,7 +502,7 @@ class MusicVisualizer {
             const p = this.particleSystem[i];
             p.x += p.vx;
             p.y += p.vy;
-            p.life -= 0.01;
+            p.life -= 0.008;
 
             if (p.life <= 0) {
                 this.particleSystem.splice(i, 1);
@@ -444,15 +510,16 @@ class MusicVisualizer {
             }
 
             this.ctx.fillStyle = p.color;
-            this.ctx.globalAlpha = p.life;
+            this.ctx.globalAlpha = p.life * 0.8;
             this.ctx.shadowColor = p.color;
-            this.ctx.shadowBlur = 10;
+            this.ctx.shadowBlur = 12;
             this.ctx.beginPath();
             this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
             this.ctx.fill();
         }
 
         this.ctx.globalAlpha = 1;
+        this.ctx.shadowBlur = 0;
     }
 
     animate() {
@@ -473,16 +540,25 @@ class MusicVisualizer {
             }
         } else {
             // Draw idle state
-            const theme = this.themes[this.colorTheme];
-            this.ctx.fillStyle = theme.bg;
+            const gradient = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
+            gradient.addColorStop(0, '#0f0f15');
+            gradient.addColorStop(1, '#1a1a25');
+            this.ctx.fillStyle = gradient;
             this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-            // Draw "Ready to play" message
+            // Draw idle message
+            const theme = this.themes[this.colorTheme];
             this.ctx.fillStyle = theme.primary;
-            this.ctx.font = '40px Arial';
+            this.ctx.font = 'bold 36px \"Courier New\", monospace';
             this.ctx.textAlign = 'center';
             this.ctx.textBaseline = 'middle';
-            this.ctx.fillText('♪ Upload and Play Music ♪', this.canvas.width / 2, this.canvas.height / 2);
+            this.ctx.shadowColor = theme.primary;
+            this.ctx.shadowBlur = 20;
+            this.ctx.fillText('♪ Select Audio ♪', this.canvas.width / 2, this.canvas.height / 2 - 30);
+            this.ctx.font = '14px \"Courier New\", monospace';
+            this.ctx.fillStyle = theme.accent;
+            this.ctx.fillText('or drag a file', this.canvas.width / 2, this.canvas.height / 2 + 20);
+            this.ctx.shadowBlur = 0;
         }
 
         requestAnimationFrame(() => this.animate());
