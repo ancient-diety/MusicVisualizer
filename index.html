@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Music Visualizer</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="app" class="app">
+        <!-- Visualization Canvas -->
+        <canvas id="visualizer" class="visualizer-canvas"></canvas>
+
+        <!-- Main Player -->
+        <main id="player" class="player">
+            <!-- File Upload Section -->
+            <div class="file-section">
+                <input type="file" id="fileInput" accept="audio/*" class="file-input" aria-label="Upload audio file">
+                <label for="fileInput" class="file-label">
+                    📁 Choose Audio File
+                </label>
+                <span id="fileName" class="file-name">No file selected</span>
+            </div>
+
+            <!-- Playback Controls -->
+            <div class="controls-section">
+                <button id="playBtn" class="control-btn" aria-label="Play">▶</button>
+                <button id="pauseBtn" class="control-btn" aria-label="Pause">⏸</button>
+                <button id="stopBtn" class="control-btn" aria-label="Stop">⏹</button>
+                
+                <div class="volume-control">
+                    <label for="volumeSlider" class="volume-label">🔊</label>
+                    <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="70" aria-label="Volume">
+                    <span id="volumeValue" class="volume-value">70%</span>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-section">
+                <div class="time-display">
+                    <span id="currentTime" class="time">0:00</span>
+                    <span id="duration" class="time">0:00</span>
+                </div>
+                <input type="range" id="progressSlider" class="progress-slider" min="0" max="100" value="0" aria-label="Progress">
+            </div>
+
+            <!-- Settings Section -->
+            <div class="settings-section">
+                <!-- Visualization Mode -->
+                <div class="setting-group">
+                    <label for="vizMode" class="setting-label">Visualization:</label>
+                    <select id="vizMode" class="setting-select" aria-label="Visualization mode">
+                        <option value="bars">Frequency Bars</option>
+                        <option value="waveform">Waveform</option>
+                        <option value="circular">Circular</option>
+                        <option value="particles">Particles</option>
+                    </select>
+                </div>
+
+                <!-- Color Theme -->
+                <div class="setting-group">
+                    <label for="colorTheme" class="setting-label">Theme:</label>
+                    <select id="colorTheme" class="setting-select" aria-label="Color theme">
+                        <option value="neon">Neon</option>
+                        <option value="fire">Fire</option>
+                        <option value="ocean">Ocean</option>
+                        <option value="forest">Forest</option>
+                        <option value="sunset">Sunset</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+
+                <!-- Animation Speed -->
+                <div class="setting-group">
+                    <label for="animSpeed" class="setting-label">Speed:</label>
+                    <select id="animSpeed" class="setting-select" aria-label="Animation speed">
+                        <option value="slow">Slow</option>
+                        <option value="normal" selected>Normal</option>
+                        <option value="fast">Fast</option>
+                    </select>
+                </div>
+
+                <!-- Fullscreen Button -->
+                <button id="fullscreenBtn" class="control-btn fullscreen-btn" aria-label="Toggle fullscreen">⛶</button>
+            </div>
+
+            <!-- Status Display -->
+            <div class="status-section">
+                <span id="status" class="status">Ready</span>
+            </div>
+        </main>
+    </div>
+
+    <!-- Audio Element -->
+    <audio id="audioElement"></audio>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
