@@ -43,6 +43,22 @@ settingsButton.addEventListener("click", () => {
 
     settingsMenu.classList.toggle("hidden");
 
+const sensitivitySlider =
+    document.getElementById("sensitivity");
+
+const sensitivityValue =
+    document.getElementById("sensitivity-value");
+
+let sensitivity = 1;
+
+sensitivitySlider.addEventListener("input", () => {
+
+    sensitivity =
+        Number(sensitivitySlider.value);
+
+    sensitivityValue.textContent =
+        `${sensitivity.toFixed(2)}x`;
+
 });
 
 
@@ -125,11 +141,7 @@ const dataArray =
 // VISUALIZER SETTINGS
 // =========================================================
 
-// Sensitivity is fixed for now.
-// We removed the old sensitivity slider
-// because it no longer exists in the HTML.
-
-const sensitivity = 1;
+// Sensitivity is no longer fixed, deleted the line.
 
 
 // =========================================================
