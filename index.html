@@ -3,113 +3,124 @@
 
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Music Visualizer</title>
+    <title>Music Visualizer</title>
 
-<link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css">
 
 </head>
 
 <body>
 
-<main id="player">
+    <main id="player">
 
-    <!-- Settings -->
-
-    <button
-        id="settings-button"
-        type="button"
-        aria-label="Open settings"
-    >
-        ⚙
-    </button>
-
-    <div id="settings-menu" class="hidden">
-
-        <h2>Appearance</h2>
+        <!-- Settings -->
 
         <button
-            class="theme-button"
+            id="settings-button"
             type="button"
-            data-theme="crimson"
+            aria-label="Open settings"
         >
-            🔴 Crimson
+            ⚙
         </button>
 
-        <button
-            class="theme-button"
-            type="button"
-            data-theme="amethyst"
-        >
-            🟣 Amethyst
-        </button>
+        <div id="settings-menu" class="hidden">
 
-        <div id="sensitivity-control">
+            <h2>Appearance</h2>
 
-            <label for="sensitivity">
-                Bar Sensitivity:
-                <span id="sensitivity-value">1.00x</span>
-            </label>
-
-            <input
-                type="range"
-                id="sensitivity"
-                min="0.25"
-                max="3"
-                step="0.05"
-                value="1"
+            <button
+                type="button"
+                class="theme-button"
+                data-theme="crimson"
             >
+                🔴 Crimson
+            </button>
+
+            <button
+                type="button"
+                class="theme-button"
+                data-theme="amethyst"
+            >
+                🟣 Amethyst
+            </button>
+
+            <div id="sensitivity-control">
+
+                <label for="sensitivity">
+                    Bar Sensitivity:
+                    <span id="sensitivity-value">1.00x</span>
+                </label>
+
+                <input
+                    type="range"
+                    id="sensitivity"
+                    min="0.25"
+                    max="3"
+                    step="0.05"
+                    value="1"
+                >
+
+            </div>
 
         </div>
 
-    </div>
+
+        <!-- Album -->
+
+        <div id="album-art"></div>
+
+        <div id="song-info">
+
+            <h1 id="song-title">Song Title</h1>
+
+            <p id="artist-name">Artist Name</p>
+
+        </div>
 
 
-    <!-- Album -->
+        <!-- Visualizer -->
 
-    <div id="album-art"></div>
+        <div id="visualizer">
 
-    <div id="song-info">
+            <div id="bars"></div>
 
-        <h1 id="song-title">Song Title</h1>
+        </div>
 
-        <p id="artist-name">Artist Name</p>
 
-    </div>
+        <!-- Music Upload -->
 
+        <input
+            type="file"
+            id="audio-file"
+            accept="audio/*"
+        >
+
+        <label
+            for="audio-file"
+            id="upload-button"
+        >
+            Upload Music
+        </label>
+
+    </main>
+
+
+    <!-- Libraries -->
+
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js">
+    </script>
+
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.4.0/color-thief.umd.js">
+    </script>
 
     <!-- Visualizer -->
 
-    <div id="visualizer">
-
-        <div id="bars"></div>
-
-    </div>
-
-
-    <!-- Music Upload -->
-
-    <input
-        type="file"
-        id="audio-file"
-        accept="audio/*"
-    >
-
-    <label for="audio-file" id="upload-button">
-        Upload Music
-    </label>
-
-</main>
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.4.0/color-thief.umd.js"></script>
-
-<script src="script.js"></script>
+    <script src="script.js"></script>
 
 </body>
 
