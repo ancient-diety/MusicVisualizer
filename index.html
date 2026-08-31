@@ -19,21 +19,37 @@
 
     <!-- Settings -->
 
-    <button id="settings-button">⚙</button>
+<div id="settings-menu" class="hidden">
 
-    <div id="settings-menu" class="hidden">
+    <h2>Appearance</h2>
 
-        <h2>Appearance</h2>
+    <button class="theme-button" data-theme="crimson">
+        🔴 Crimson
+    </button>
 
-        <button class="theme-button" data-theme="crimson">
-            🔴 Crimson
-        </button>
+    <button class="theme-button" data-theme="amethyst">
+        🟣 Amethyst
+    </button>
 
-        <button class="theme-button" data-theme="amethyst">
-            🟣 Amethyst
-        </button>
+    <div id="sensitivity-control">
+
+        <label for="sensitivity">
+            Bar Sensitivity:
+            <span id="sensitivity-value">1.00x</span>
+        </label>
+
+        <input
+            type="range"
+            id="sensitivity"
+            min="0.25"
+            max="3"
+            step="0.05"
+            value="1"
+        >
 
     </div>
+
+</div>
 
 
     <!-- Album -->
