@@ -2,22 +2,26 @@
 // CREATE VISUALIZER BARS
 // =========================================================
 
-const barsContainer = document.getElementById("bars");
+const barsContainer =
+    document.getElementById("bars");
 
 const BAR_COUNT = 64;
 
 for (let i = 0; i < BAR_COUNT; i++) {
 
-    const bar = document.createElement("div");
+    const bar =
+        document.createElement("div");
 
     bar.className = "bar";
+
     bar.style.height = "8px";
 
     barsContainer.appendChild(bar);
 
 }
 
-const bars = document.querySelectorAll(".bar");
+const bars =
+    document.querySelectorAll(".bar");
 
 const songTitle =
     document.getElementById("song-title");
@@ -43,13 +47,22 @@ settingsButton.addEventListener("click", () => {
 
     settingsMenu.classList.toggle("hidden");
 
+});
+
+
+// =========================================================
+// SENSITIVITY
+// =========================================================
+
 const sensitivitySlider =
     document.getElementById("sensitivity");
 
 const sensitivityValue =
     document.getElementById("sensitivity-value");
 
-let sensitivity = 1;
+let sensitivity =
+    Number(sensitivitySlider.value);
+
 
 sensitivitySlider.addEventListener("input", () => {
 
@@ -76,6 +89,7 @@ themeButtons.forEach(button => {
         const theme =
             button.dataset.theme;
 
+
         if (theme === "crimson") {
 
             document.documentElement.style.setProperty(
@@ -84,6 +98,7 @@ themeButtons.forEach(button => {
             );
 
         }
+
 
         else if (theme === "amethyst") {
 
@@ -112,15 +127,19 @@ let audio =
     new Audio();
 
 audio.preload = "auto";
+
 audio.volume = 1;
+
 
 const audioContext =
     new AudioContext();
+
 
 const analyser =
     audioContext.createAnalyser();
 
 analyser.fftSize = 128;
+
 
 const source =
     audioContext.createMediaElementSource(audio);
@@ -131,17 +150,11 @@ analyser.connect(
     audioContext.destination
 );
 
+
 const dataArray =
     new Uint8Array(
         analyser.frequencyBinCount
     );
-
-
-// =========================================================
-// VISUALIZER SETTINGS
-// =========================================================
-
-// Sensitivity is no longer fixed, deleted the line because we brought the slider back.
 
 
 // =========================================================
@@ -150,7 +163,7 @@ const dataArray =
 
 audioFile.addEventListener(
     "change",
-    async (event) => {
+    async event => {
 
         const file =
             event.target.files[0];
@@ -160,16 +173,14 @@ audioFile.addEventListener(
         }
 
 
-        // -----------------------------------------
-        // LOAD AUDIO
-        // -----------------------------------------
-
         const songURL =
             URL.createObjectURL(file);
 
+
         audio.pause();
 
-        audio.src = songURL;
+        audio.src =
+            songURL;
 
         audio.load();
 
@@ -201,9 +212,9 @@ audioFile.addEventListener(
         }
 
 
-        // -----------------------------------------
-        // SONG METADATA
-        // -----------------------------------------
+        // =====================================================
+        // READ METADATA
+        // =====================================================
 
         jsmediatags.read(file, {
 
@@ -223,9 +234,9 @@ audioFile.addEventListener(
                     "Unknown Artist";
 
 
-                // ---------------------------------
+                // =================================================
                 // ALBUM ART
-                // ---------------------------------
+                // =================================================
 
                 if (!tags.picture) {
                     return;
@@ -235,7 +246,9 @@ audioFile.addEventListener(
                 const picture =
                     tags.picture;
 
-                let base64 = "";
+
+                let base64 =
+                    "";
 
 
                 for (
@@ -266,9 +279,9 @@ audioFile.addEventListener(
                     "center";
 
 
-                // ---------------------------------
+                // =================================================
                 // COLOR THIEF
-                // ---------------------------------
+                // =================================================
 
                 if (
                     typeof ColorThief ===
@@ -287,7 +300,9 @@ audioFile.addEventListener(
                 const img =
                     new Image();
 
-                img.src = image;
+
+                img.src =
+                    image;
 
 
                 img.onload = () => {
@@ -296,6 +311,7 @@ audioFile.addEventListener(
 
                         const colorThief =
                             new ColorThief();
+
 
                         const colors =
                             colorThief.getPalette(
