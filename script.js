@@ -141,7 +141,7 @@ const dataArray =
 // VISUALIZER SETTINGS
 // =========================================================
 
-// Sensitivity is no longer fixed, deleted the line.
+// Sensitivity is no longer fixed, deleted the line because we brought the slider back.
 
 
 // =========================================================
