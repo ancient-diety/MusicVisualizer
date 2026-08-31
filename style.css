@@ -191,6 +191,36 @@ body {
 
 }
 
+#sensitivity-control {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+    padding-top: 5px;
+
+}
+
+#sensitivity-control label {
+
+    color: var(--text);
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+}
+
+#sensitivity {
+
+    width: 100%;
+
+    cursor: pointer;
+
+}
+
 
 /* ========================================================= */
 /* ALBUM ART */
