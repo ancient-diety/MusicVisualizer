@@ -24,7 +24,10 @@ const artistName = document.getElementById("artist-name");
 
 const albumArt = document.getElementById("album-art");
 
-const colorThief = new ColorThief();
+const colorThief =
+    typeof ColorThief !== "undefined"
+        ? new ColorThief()
+        : null;
 
 // =========================================================
 // SETTINGS MENU
@@ -188,8 +191,10 @@ audioFile.addEventListener("change", async (event) => {
 
                     try {
 
-                        const colors =
-                            colorThief.getPalette(img, 2);
+                        if (!colorThief) return;
+
+                         const colors =
+                          colorThief.getPalette(img, 2);
 
                         const color1 = colors[0];
 
