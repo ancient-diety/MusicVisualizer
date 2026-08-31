@@ -3,6 +3,7 @@
 // =========================================================
 
 const barsContainer = document.getElementById("bars");
+
 const BAR_COUNT = 64;
 
 for (let i = 0; i < BAR_COUNT; i++) {
@@ -18,23 +19,25 @@ for (let i = 0; i < BAR_COUNT; i++) {
 
 const bars = document.querySelectorAll(".bar");
 
-const songTitle = document.getElementById("song-title");
+const songTitle =
+    document.getElementById("song-title");
 
-const artistName = document.getElementById("artist-name");
+const artistName =
+    document.getElementById("artist-name");
 
-const albumArt = document.getElementById("album-art");
+const albumArt =
+    document.getElementById("album-art");
 
-const colorThief =
-    typeof ColorThief !== "undefined"
-        ? new ColorThief()
-        : null;
 
 // =========================================================
 // SETTINGS MENU
 // =========================================================
 
-const settingsButton = document.getElementById("settings-button");
-const settingsMenu = document.getElementById("settings-menu");
+const settingsButton =
+    document.getElementById("settings-button");
+
+const settingsMenu =
+    document.getElementById("settings-menu");
 
 settingsButton.addEventListener("click", () => {
 
@@ -42,34 +45,20 @@ settingsButton.addEventListener("click", () => {
 
 });
 
-const sensitivitySlider =
-    document.getElementById("sensitivity");
-
-const sensitivityValue =
-    document.getElementById("sensitivity-value");
-
-let sensitivity = 1;
-
-sensitivitySlider.addEventListener("input", () => {
-
-    sensitivity = Number(sensitivitySlider.value);
-
-    sensitivityValue.textContent =
-        `${sensitivity.toFixed(2)}x`;
-
-});
 
 // =========================================================
 // THEMES
 // =========================================================
 
-const themeButtons = document.querySelectorAll(".theme-button");
+const themeButtons =
+    document.querySelectorAll(".theme-button");
 
 themeButtons.forEach(button => {
 
     button.addEventListener("click", () => {
 
-        const theme = button.dataset.theme;
+        const theme =
+            button.dataset.theme;
 
         if (theme === "crimson") {
 
@@ -78,7 +67,9 @@ themeButtons.forEach(button => {
                 "linear-gradient(to top, #700000, #ff3b3b)"
             );
 
-        } else if (theme === "amethyst") {
+        }
+
+        else if (theme === "amethyst") {
 
             document.documentElement.style.setProperty(
                 "--bar-gradient",
@@ -86,6 +77,8 @@ themeButtons.forEach(button => {
             );
 
         }
+
+        settingsMenu.classList.add("hidden");
 
     });
 
@@ -96,16 +89,20 @@ themeButtons.forEach(button => {
 // AUDIO
 // =========================================================
 
-const audioFile = document.getElementById("audio-file");
+const audioFile =
+    document.getElementById("audio-file");
 
-let audio = new Audio();
+let audio =
+    new Audio();
 
 audio.preload = "auto";
 audio.volume = 1;
 
-const audioContext = new AudioContext();
+const audioContext =
+    new AudioContext();
 
-const analyser = audioContext.createAnalyser();
+const analyser =
+    audioContext.createAnalyser();
 
 analyser.fftSize = 128;
 
@@ -113,76 +110,121 @@ const source =
     audioContext.createMediaElementSource(audio);
 
 source.connect(analyser);
-analyser.connect(audioContext.destination);
+
+analyser.connect(
+    audioContext.destination
+);
 
 const dataArray =
-    new Uint8Array(analyser.frequencyBinCount);
+    new Uint8Array(
+        analyser.frequencyBinCount
+    );
+
+
+// =========================================================
+// VISUALIZER SETTINGS
+// =========================================================
+
+// Sensitivity is fixed for now.
+// We removed the old sensitivity slider
+// because it no longer exists in the HTML.
+
+const sensitivity = 1;
 
 
 // =========================================================
 // LOAD SONG
 // =========================================================
 
-audioFile.addEventListener("change", async (event) => {
+audioFile.addEventListener(
+    "change",
+    async (event) => {
 
-    const file = event.target.files[0];
+        const file =
+            event.target.files[0];
 
-    if (!file) return;
+        if (!file) {
+            return;
+        }
 
-    // Create a temporary URL for the selected song
-    const songURL = URL.createObjectURL(file);
 
-    audio.pause();
-    audio.src = songURL;
-    audio.load();
+        // -----------------------------------------
+        // LOAD AUDIO
+        // -----------------------------------------
 
-    try {
+        const songURL =
+            URL.createObjectURL(file);
 
-        // Resume the audio system if the browser suspended it
-        if (audioContext.state === "suspended") {
+        audio.pause();
 
-            await audioContext.resume();
+        audio.src = songURL;
+
+        audio.load();
+
+
+        try {
+
+            if (
+                audioContext.state ===
+                "suspended"
+            ) {
+
+                await audioContext.resume();
+
+            }
+
+            await audio.play();
 
         }
 
-        // Start the song
-        await audio.play();
+        catch (error) {
 
-    } catch (error) {
+            console.error(
+                "Audio playback failed:",
+                error
+            );
 
-        console.error("Mossy Visualizer could not play this song:", error);
+            return;
 
-        return;
-
-    }
-
-
-    // =====================================================
-    // READ SONG METADATA
-    // =====================================================
-
-    jsmediatags.read(file, {
-
-        onSuccess: function(tag) {
-
-            const tags = tag.tags;
-
-            songTitle.textContent =
-                tags.title || file.name;
-
-            artistName.textContent =
-                tags.artist || "Unknown Artist";
+        }
 
 
-            // =================================================
-            // ALBUM ART
-            // =================================================
+        // -----------------------------------------
+        // SONG METADATA
+        // -----------------------------------------
 
-            if (tags.picture) {
+        jsmediatags.read(file, {
 
-                const picture = tags.picture;
+            onSuccess: function(tag) {
+
+                const tags =
+                    tag.tags;
+
+
+                songTitle.textContent =
+                    tags.title ||
+                    file.name;
+
+
+                artistName.textContent =
+                    tags.artist ||
+                    "Unknown Artist";
+
+
+                // ---------------------------------
+                // ALBUM ART
+                // ---------------------------------
+
+                if (!tags.picture) {
+                    return;
+                }
+
+
+                const picture =
+                    tags.picture;
 
                 let base64 = "";
+
 
                 for (
                     let i = 0;
@@ -190,11 +232,13 @@ audioFile.addEventListener("change", async (event) => {
                     i++
                 ) {
 
-                    base64 += String.fromCharCode(
-                        picture.data[i]
-                    );
+                    base64 +=
+                        String.fromCharCode(
+                            picture.data[i]
+                        );
 
                 }
+
 
                 const image =
                     `data:${picture.format};base64,${btoa(base64)}`;
@@ -210,29 +254,59 @@ audioFile.addEventListener("change", async (event) => {
                     "center";
 
 
-                // =================================================
+                // ---------------------------------
                 // COLOR THIEF
-                // =================================================
+                // ---------------------------------
 
-                const img = new Image();
+                if (
+                    typeof ColorThief ===
+                    "undefined"
+                ) {
+
+                    console.warn(
+                        "ColorThief is not available."
+                    );
+
+                    return;
+
+                }
+
+
+                const img =
+                    new Image();
 
                 img.src = image;
+
 
                 img.onload = () => {
 
                     try {
 
-                        if (!colorThief) return;
+                        const colorThief =
+                            new ColorThief();
 
                         const colors =
-                            colorThief.getPalette(img, 2);
+                            colorThief.getPalette(
+                                img,
+                                2
+                            );
 
-                        if (!colors || colors.length < 2) {
+
+                        if (
+                            !colors ||
+                            colors.length < 2
+                        ) {
+
                             return;
+
                         }
 
-                        const color1 = colors[0];
-                        const color2 = colors[1];
+
+                        const color1 =
+                            colors[0];
+
+                        const color2 =
+                            colors[1];
 
 
                         document.documentElement.style.setProperty(
@@ -247,10 +321,12 @@ audioFile.addEventListener("change", async (event) => {
 
                         );
 
-                    } catch (error) {
+                    }
+
+                    catch (error) {
 
                         console.error(
-                            "ColorThief:",
+                            "ColorThief error:",
                             error
                         );
 
@@ -258,22 +334,23 @@ audioFile.addEventListener("change", async (event) => {
 
                 };
 
+            },
+
+
+            onError: function(error) {
+
+                console.error(
+                    "Metadata reading failed:",
+                    error
+                );
+
             }
 
-        },
+        });
 
-        onError: function(error) {
+    }
+);
 
-            console.error(
-                "jsmediatags could not read this song:",
-                error
-            );
-
-        }
-
-    });
-
-});
 
 // =========================================================
 // VISUALIZER
@@ -281,52 +358,79 @@ audioFile.addEventListener("change", async (event) => {
 
 function animateBars() {
 
-    requestAnimationFrame(animateBars);
+    requestAnimationFrame(
+        animateBars
+    );
 
-    analyser.getByteFrequencyData(dataArray);
 
-    bars.forEach((bar, index) => {
+    analyser.getByteFrequencyData(
+        dataArray
+    );
 
-        let value = dataArray[index];
 
-        // Reduce bass
+    bars.forEach(
+        (bar, index) => {
 
-        const weight =
-            0.35 +
-            Math.pow(index / BAR_COUNT, 0.8) *
-            0.65;
+            let value =
+                dataArray[index];
 
-        value *= weight;
 
-        // Compress loud sounds
+            // Reduce bass slightly
 
-        const compressed =
-            Math.pow(value, 0.7);
+            const weight =
+                0.35 +
+                Math.pow(
+                    index / BAR_COUNT,
+                    0.8
+                ) *
+                0.65;
 
-        // Calculate height
 
-        const targetHeight =
-            Math.max(
-                8,
-                compressed *
-                5 *
-                sensitivity
-            );
+            value *= weight;
 
-        // Smooth animation
 
-        const currentHeight =
-            parseFloat(bar.style.height) || 8;
+            // Compress loud sounds
 
-        const smoothHeight =
-            currentHeight +
-            (targetHeight - currentHeight) *
-            0.35;
+            const compressed =
+                Math.pow(
+                    value,
+                    0.7
+                );
 
-        bar.style.height =
-            `${smoothHeight}px`;
 
-    });
+            // Calculate height
+
+            const targetHeight =
+                Math.max(
+                    8,
+                    compressed *
+                    5 *
+                    sensitivity
+                );
+
+
+            // Smooth animation
+
+            const currentHeight =
+                parseFloat(
+                    bar.style.height
+                ) || 8;
+
+
+            const smoothHeight =
+                currentHeight +
+                (
+                    targetHeight -
+                    currentHeight
+                ) *
+                0.35;
+
+
+            bar.style.height =
+                `${smoothHeight}px`;
+
+        }
+    );
 
 }
 
