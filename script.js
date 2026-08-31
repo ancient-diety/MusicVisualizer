@@ -100,6 +100,9 @@ const audioFile = document.getElementById("audio-file");
 
 let audio = new Audio();
 
+audio.preload = "auto";
+audio.volume = 1;
+
 const audioContext = new AudioContext();
 
 const analyser = audioContext.createAnalyser();
