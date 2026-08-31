@@ -126,11 +126,37 @@ audioFile.addEventListener("change", async (event) => {
 
     if (!file) return;
 
-    audio.src = URL.createObjectURL(file);
+    // Create a temporary URL for the selected song
+    const songURL = URL.createObjectURL(file);
 
-    await audioContext.resume();
+    audio.pause();
+    audio.src = songURL;
+    audio.load();
 
-    await audio.play();
+    try {
+
+        // Resume the audio system if the browser suspended it
+        if (audioContext.state === "suspended") {
+
+            await audioContext.resume();
+
+        }
+
+        // Start the song
+        await audio.play();
+
+    } catch (error) {
+
+        console.error("Mossy Visualizer could not play this song:", error);
+
+        return;
+
+    }
+
+
+    // =====================================================
+    // READ SONG METADATA
+    // =====================================================
 
     jsmediatags.read(file, {
 
@@ -139,11 +165,15 @@ audioFile.addEventListener("change", async (event) => {
             const tags = tag.tags;
 
             songTitle.textContent =
-                tags.title || "Unknown Title";
+                tags.title || file.name;
 
             artistName.textContent =
                 tags.artist || "Unknown Artist";
 
+
+            // =================================================
+            // ALBUM ART
+            // =================================================
 
             if (tags.picture) {
 
@@ -157,15 +187,15 @@ audioFile.addEventListener("change", async (event) => {
                     i++
                 ) {
 
-                    base64 +=
-                        String.fromCharCode(
-                            picture.data[i]
-                        );
+                    base64 += String.fromCharCode(
+                        picture.data[i]
+                    );
 
                 }
 
                 const image =
                     `data:${picture.format};base64,${btoa(base64)}`;
+
 
                 albumArt.style.backgroundImage =
                     `url(${image})`;
@@ -177,10 +207,13 @@ audioFile.addEventListener("change", async (event) => {
                     "center";
 
 
+                // =================================================
+                // COLOR THIEF
+                // =================================================
+
                 const img = new Image();
 
                 img.src = image;
-
 
                 img.onload = () => {
 
@@ -188,26 +221,32 @@ audioFile.addEventListener("change", async (event) => {
 
                         if (!colorThief) return;
 
-                         const colors =
-                          colorThief.getPalette(img, 2);
+                        const colors =
+                            colorThief.getPalette(img, 2);
+
+                        if (!colors || colors.length < 2) {
+                            return;
+                        }
 
                         const color1 = colors[0];
-
                         const color2 = colors[1];
 
 
                         document.documentElement.style.setProperty(
+
                             "--player",
+
                             `linear-gradient(
                                 135deg,
                                 rgb(${color1.join(",")}),
                                 rgb(${color2.join(",")})
                             )`
+
                         );
 
                     } catch (error) {
 
-                        console.log(
+                        console.error(
                             "ColorThief:",
                             error
                         );
@@ -218,12 +257,20 @@ audioFile.addEventListener("change", async (event) => {
 
             }
 
+        },
+
+        onError: function(error) {
+
+            console.error(
+                "jsmediatags could not read this song:",
+                error
+            );
+
         }
 
     });
 
 });
-
 
 // =========================================================
 // VISUALIZER
