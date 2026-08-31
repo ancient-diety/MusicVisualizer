@@ -19,37 +19,53 @@
 
     <!-- Settings -->
 
-<div id="settings-menu" class="hidden">
-
-    <h2>Appearance</h2>
-
-    <button class="theme-button" data-theme="crimson">
-        🔴 Crimson
+    <button
+        id="settings-button"
+        type="button"
+        aria-label="Open settings"
+    >
+        ⚙
     </button>
 
-    <button class="theme-button" data-theme="amethyst">
-        🟣 Amethyst
-    </button>
+    <div id="settings-menu" class="hidden">
 
-    <div id="sensitivity-control">
+        <h2>Appearance</h2>
 
-        <label for="sensitivity">
-            Bar Sensitivity:
-            <span id="sensitivity-value">1.00x</span>
-        </label>
-
-        <input
-            type="range"
-            id="sensitivity"
-            min="0.25"
-            max="3"
-            step="0.05"
-            value="1"
+        <button
+            class="theme-button"
+            type="button"
+            data-theme="crimson"
         >
+            🔴 Crimson
+        </button>
+
+        <button
+            class="theme-button"
+            type="button"
+            data-theme="amethyst"
+        >
+            🟣 Amethyst
+        </button>
+
+        <div id="sensitivity-control">
+
+            <label for="sensitivity">
+                Bar Sensitivity:
+                <span id="sensitivity-value">1.00x</span>
+            </label>
+
+            <input
+                type="range"
+                id="sensitivity"
+                min="0.25"
+                max="3"
+                step="0.05"
+                value="1"
+            >
+
+        </div>
 
     </div>
-
-</div>
 
 
     <!-- Album -->
@@ -76,15 +92,15 @@
 
     <!-- Music Upload -->
 
-<input
-    type="file"
-    id="audio-file"
-    accept="audio/*"
->
+    <input
+        type="file"
+        id="audio-file"
+        accept="audio/*"
+    >
 
-<label for="audio-file" id="upload-button">
-    Upload Music
-</label>
+    <label for="audio-file" id="upload-button">
+        Upload Music
+    </label>
 
 </main>
 
