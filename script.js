@@ -96,16 +96,9 @@ themeButtons.forEach(button => {
 // AUDIO
 // =========================================================
 
-const uploadButton = document.getElementById("upload-button");
 const audioFile = document.getElementById("audio-file");
 
 let audio = new Audio();
-
-uploadButton.addEventListener("click", () => {
-
-    audioFile.click();
-
-});
 
 const audioContext = new AudioContext();
 
@@ -113,12 +106,14 @@ const analyser = audioContext.createAnalyser();
 
 analyser.fftSize = 128;
 
-const source = audioContext.createMediaElementSource(audio);
+const source =
+    audioContext.createMediaElementSource(audio);
 
 source.connect(analyser);
 analyser.connect(audioContext.destination);
 
-const dataArray = new Uint8Array(analyser.frequencyBinCount);
+const dataArray =
+    new Uint8Array(analyser.frequencyBinCount);
 
 
 // =========================================================
