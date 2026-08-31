@@ -397,14 +397,18 @@ body {
 
 }
 
+#audio-file {
+    display: none;
+}
+
+
 /* ========================================================= */
 /* HIDDEN */
 /* ========================================================= */
 
 .hidden {
 
-    display:
-        none !important;
+    display: none !important;
 
 }
 
